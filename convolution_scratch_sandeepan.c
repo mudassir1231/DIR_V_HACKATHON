@@ -34,3 +34,38 @@ int lowerTensor(int num_rows, int num_cols, int input[num_rows][num_cols], int f
         }
     }
 }
+
+
+// computing matrix multiplication of 1x4 weight with 4x1 input matrix
+int compute_matrix_multiplication( int8_t inp_mat[4][1], int8_t weight_matrix[1][4]){
+     long int result_val = 0;
+        for(int idx = 0; idx < 4; ++idx){
+                result_val += weight_matrix[1][idx] * inp_mat[idx][1];
+        //      printf("Input: %d \t Weight: %d \t Result of the computation is %ld \n ",inp_mat[1][idx], weight_matrix[1][idx], result_val);
+    }
+        return result_val;
+}
+
+//function to pass values sequentially . Assumes  a 2x2 kernel and a 8x8 matrix . After flattening, the image matrix becomes 64x1 and flattening across the rows, weight matrix becomes 1x4
+ int pass_values(int8_t matrix[64][1], int init, int limit, int8_t out_mat[4][1]){
+        for(size_t iter = init ; iter <= limit; ++iter){
+                out_mat[iter][1] = matrix[iter][1];
+        }
+
+ }
+
+//function to add the values obtained from the matrix multiplication as post-processing
+
+int post_process(int8_t res[16], int bias){
+        long int accumulate =0;
+        for(size_t s_a = 0; s_a < 16; ++s_a){
+                accumulate+= res[s_a];
+        }
+        return accumulate + bias;
+}
+
+int main() {
+
+        return 0;
+}
+                          
