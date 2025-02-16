@@ -54,23 +54,13 @@ int compute_matrix_multiplication( int8_t inp_mat[8][1], int8_t weight_matrix[1]
         for(int idx = 0; idx < 8; ++idx){
                 result_val += weight_matrix[1][idx] * inp_mat[idx][1];
                 printf("Input: %d \t Weight: %d \t Result of the computation is %ld \n ",inp_mat[1][idx], weight_matrix[1][idx], result_val);
-    }
-        return result_val;
-}
-/*int pass_values(int8_t matrix[64][1], int8_t weights[1][8], int8_t reslt[8]){
-        // for(size_t s_1 = 0; s_1 < 4; ++s_1){
-        //       for(size_t s_2 = 0; s_2 < 64; ++s_2){
-        //               if(s_2 %  == ){
-         reslt[0] = compute_matrix_multiplication(matrix[0..7][1], weights[1][8]);
-         reslt[1] = compute_matrix_multiplication(matrix[8..15][1], weights[1][8]);
-         reslt[2] = compute_matrix_multiplication(matrix[16..23][1], weights[1][8]);
-         reslt[3] = compute_matrix_multiplication(matrix[24..31][1], weights[1][8]);
-         reslt[0] = compute_matrix_multiplication(matrix[32..39][1], weights[1][8]);
-         reslt[1] = compute_matrix_multiplication(matrix[40..47][1], weights[1][8]);
-         reslt[2] = compute_matrix_multiplication(matrix[48..55][1], weights[1][8]);
-         reslt[3] = compute_matrix_multiplication(matrix[56..63][1], weights[1][8]);
+    }                                                                                                                                                   return result_val;                                                                                                                      }                                                                                                                                                                                                                                                                                               //function to pass values sequentially . Assumes  a 2x2 kernel and a 8x8 matrix . After flattening, the image matrix becomes 64x1 and flattening across the rows, weight matrix becomes 1x4
+ int pass_values(int8_t matrix[64][1], int8_t weights[1][8], int init, int limit, int8_t out_mat[8][1]){
+        for(size_t iter = init ; iter <= limit; ++iter){
+                out_mat[iter][1] = matrix[iter][1];
+        }
 
- }*/
+ }
 
 int main() {
     // Write C code here
@@ -82,14 +72,28 @@ int main() {
         int8_t sm[8][1] = {{1},{2},{3},{4},{5},{6},{7},{8}};
         transpose_matrix(mat, trans_mat);
         int8_t sample[1][8] = {{1,2,3,4,5,6,7,8}};
-        long int res;
-    //printf("Content at tranposed matrix %d", trans_mat[1][1]);
-    //  for(int k = 0; k < 8; ++k){
-      //        printf("Contents of the input matrix %d \n", trans_mat[1][k]);
-        // }
-        //int8_t sample[1][8] = {{1,2,3,4,5,6,7,8}};
-        //row_transpose(sample, sm);
 
-        res = (long int)compute_matrix_multiplication(sm, sample);
+        long int res;
+        int8_t out_mat_1[8][1];
+
+        long int reslt[8];
+        int8_t hh[64][1];
+
+        pass_values(hh, sample, 0, 15, out_mat_1);
+        reslt[0] = compute_matrix_multiplication(out_mat_1, sample);
+        pass_values(hh, sample, 16, 23, out_mat_1);
+        reslt[1] = compute_matrix_multiplication(out_mat_1, sample);
+        pass_values(hh, sample, 24, 31, out_mat_1);
+        reslt[2] = compute_matrix_multiplication(out_mat_1, sample);
+        pass_values(hh, sample, 32, 47, out_mat_1);
+        reslt[3] = compute_matrix_multiplication(out_mat_1, sample);
+        pass_values(hh, sample, 48, 55, out_mat_1);
+        reslt[4] = compute_matrix_multiplication(out_mat_1, sample);
+        pass_values(hh, sample, 56, 63, out_mat_1);
+        reslt[5] = compute_matrix_multiplication(out_mat_1, sample);
+
+
+        res = compute_matrix_multiplication(sm, sample);
         printf("Result %ld \t", res);
-    return 0;
+        return 0;
+}
