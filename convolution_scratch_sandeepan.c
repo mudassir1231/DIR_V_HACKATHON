@@ -1,4 +1,63 @@
- /*int pass_values(int8_t matrix[64][1], int8_t weights[1][8], int8_t reslt[8]){
+#include <stdio.h>
+#include <stdint.h>
+
+//transpose from a column to row matrix
+
+int row_transpose(int8_t mat[1][8], int8_t result_mat[8]){
+        for(int x = 0; x < 8; ++x){
+                result_mat[x] = mat[1][x];
+        //      printf("Computed row transpose %d \n", result_mat[x]);
+        }
+}
+
+//compute the transpose of  weight matrix
+int transpose_matrix(int8_t matrix[8], int8_t transposed_matrix[1][8]){
+    //int ind = 0;
+    for(int s = 0; s < 8; ++s){
+        transposed_matrix[1][s] = matrix[s];
+       // printf("Transposed matrix %d \n", transposed_matrix[1][s]);
+    }
+}
+
+// Function to lower the tensor (flatten the matrix) --should be flattened column wise for matrix multiplication
+//Step 1 -> Weight matrix is flattened
+//Step 2-> Input matrix is flattened
+//Step 3 -> Weight Matrix is computed for matrix multiplication
+//Step 4 -> Add the values received through multipplication and add bias as preprocessing
+
+//to be parametrized for any computation. Currently hard-coded for initial implementation
+
+int lowerTensor(int num_rows, int num_cols, int input[num_rows][num_cols], int flattened[num_rows*num_cols][1]) {
+    int index = 0;
+    for (int i = 0; i <= (num_rows-1); ++i) {
+        for (int j = 0; j <= (num_cols-1); ++j) {
+            flattened[index++][1] = input[i][j]; //storing the elements accessed row wise in one column
+        }
+    }
+}      
+
+//function to compute the flattening of weight matrix
+
+int flatten_row(int weights[2][2], int flat_matrix[4]){
+
+        int id = 0;
+        for(int c = 0; c <2; ++c){
+                for(int c_1 = 0; c_1 <2; ++c_1){
+                       flat_matrix[id++] = weights[c][c_1];
+                }
+        }
+}
+
+// computing matrix multiplication of 1x8 weight with 8x1 input matrix
+int compute_matrix_multiplication( int8_t inp_mat[8][1], int8_t weight_matrix[1][8]){
+     long int result_val = 0;
+        for(int idx = 0; idx < 8; ++idx){
+                result_val += weight_matrix[1][idx] * inp_mat[idx][1];
+                printf("Input: %d \t Weight: %d \t Result of the computation is %ld \n ",inp_mat[1][idx], weight_matrix[1][idx], result_val);
+    }
+        return result_val;
+}
+/*int pass_values(int8_t matrix[64][1], int8_t weights[1][8], int8_t reslt[8]){
         // for(size_t s_1 = 0; s_1 < 4; ++s_1){
         //       for(size_t s_2 = 0; s_2 < 64; ++s_2){
         //               if(s_2 %  == ){
