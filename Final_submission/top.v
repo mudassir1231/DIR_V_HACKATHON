@@ -1,5 +1,8 @@
 `include"activation_sram.v"
 `include"weights_sram.v"
+`include"systolic_array.v"
+`include"mac.v"
+`include"uart_tx.v"
 
 module top(
   input clk,
